@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { FormEvent } from "react";
+
+import "./App.css";
+import { useMultistepForm } from "./useMultistepForm";
 
 function App() {
+  const { steps, currentStepIndex, step, next, back} = useMultistepForm([
+    <div>1</div>,
+    <div>2</div>,
+    <div>3</div>,
+    <div>4</div>,
+    <div>5</div>,
+  ]);
+  function onSubmit(e: FormEvent) {
+    e.preventDefault();
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="relative bg-white border border-black p-8 m-4 rounded-[.5rem]">
+      <form onSubmit={onSubmit}>
+        <div className="absolute top-4 right-4">
+          {currentStepIndex}/{steps.length}
+        </div>
+        {step}
+        <div className="mt-4 flex gap-2 justify-end">
+          {currentStepIndex != 0 && (
+            <button onClick={() => back()}>back</button>
+          )}
+          {currentStepIndex != steps.length && (
+            <button onClick={() => next()}>next</button>
+          )}
+        </div>
+      </form>
     </div>
   );
 }
